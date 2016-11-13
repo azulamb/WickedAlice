@@ -37,6 +37,7 @@ const GOOGLE_SCOPE: string[] = process.env.GOOGLE_SCOPE ? process.env.GOOGLE_SCO
 const LOCAL_STORAGE: string = process.env.LOCAL_STORAGE || './data';
 const PRIVATE_DIR: string = process.env.PRIVATE_DOCUMENT || './private';
 const PAGE_OPTION = { root: path.resolve( PRIVATE_DIR )/*, headers: { 'Content-Type': 'text/html' }*/ };
+const USER = process.env.USER || '';
 
 function PrivatePage( req: express.Request, res: express.Response, next: express.NextFunction )
 {
@@ -102,7 +103,10 @@ Init().then( ( result ) =>
 	l.info( 'Root directory: ' + process.cwd() );
 	l.info( 'Listen on port: ' + PORT );
 
-	AppInit( result.ls, result.db ).listen( PORT );
+	AppInit( result.ls, result.db ).listen( PORT, () =>
+	{
+		if ( USER ){ process.setuid( USER ); }
+	} );
 } ).catch( ( error ) =>
 {
 	l.error( error );

@@ -17,3 +17,27 @@ https://console.developers.google.com/
 
 ## インストール
 
+### リポジトリのclone
+
+初回のみ。
+
+```
+git clone https://github.com/HirokiMiyaoka/WickedAlice.git
+```
+
+### 環境変数の設定
+
+
+
+### アップデート
+
+アップデートする際の作業。
+初回は上に続けてこちらも実行。
+
+```
+cd WickedAlice/
+git pull
+npm i
+npm run build
+```
+
