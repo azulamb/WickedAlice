@@ -1,0 +1,7 @@
+node_modules/*
+server/*
+private/app.js
+data/*
+*.sublime-workspace
+*.bat
+*.txt

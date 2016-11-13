@@ -1,0 +1,248 @@
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+html
+{
+	height:100%;
+}
+
+body
+{
+	font-family: "游ゴシック", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ ゴシック", sans-serif;
+	height: 100%;
+}
+
+body > div
+{
+	position: relative;
+	width: 100%;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+}
+
+header
+{
+	height: 1rem;
+	overflow: hidden;
+}
+
+article
+{
+	padding-bottom: 1rem;
+}
+
+article:after
+{
+	content: "";
+	clear: both;
+	display: block;
+}
+
+article > section
+{
+	float: left;
+	transition: all 0.1s ease-in;
+}
+
+.menuArea
+{
+	width: 10rem;
+	margin-left: 0;
+}
+
+.menuArea.close
+{
+	margin-left: -10rem;
+}
+
+.contentArea
+{
+	width: calc( 100% - 10rem );
+}
+
+.menuArea.close + .contentArea
+{
+	width: 100%;
+}
+
+#menu
+{
+	border-radius: 0 0.2rem 0.2rem 0;
+	padding: 0.1rem;
+}
+
+#content
+{
+	border-radius: 0.2rem;
+	margin: 0 0.5rem;
+	padding: 0.5rem;
+}
+
+footer
+{
+	position: absolute;
+	width: 100%;
+	height: 1rem;
+	bottom: 0;
+	text-align: center;
+	overflow: hidden;
+}
+
+.clickable { cursor: pointer; }
+
+button
+{
+	border: 0;
+	border-radius: 0.2rem;
+}
+
+input
+{
+	border: 0;
+	border-radius: 0.2rem;
+	transition: all 0.1s ease-in;
+}
+
+/* ========== Component Style ========== */
+
+/* LinkItems */
+.componentLinkItems
+{
+	list-style: none;
+}
+
+.componentLinkItems > .componentLinkItem
+{
+	border-radius: 0.2rem;
+	margin: 0.2rem 0;
+}
+
+/* InputLines */
+.componentInputLines
+{
+	list-style: none;
+	margin: 1rem 0;
+}
+
+.componentInputLines .componentToggle
+{
+	float: left;
+}
+
+.componentInputLines .componentListItem
+{
+	margin: 0.2rem 0;
+}
+
+.componentInputLines .componentListItem > .componentButton
+{
+	display: inline-block;
+	width: 2rem;
+	height: 2rem;
+}
+
+/* InputLine */
+.componentInputLine
+{
+	height: 2rem;
+	padding: 0 0.1rem;
+	box-sizing: border-box;
+}
+
+/* Toggle */
+.componentToggle
+{
+	width: 3rem;
+	height: 2rem;
+	box-sizing: border-box;
+	border-width: 0.2rem;
+	border-style: solid;
+	border-radius: 1rem;
+	transition: all 0.1s ease-in;
+	position: relative;
+}
+
+.componentToggle > div
+{
+	width: 1.6rem;
+	height: 1.6rem;
+	border-radius: 50%;
+	transition: all 0.1s ease-in;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.componentToggle.on > div
+{
+	left: 1rem;
+}
+
+/* ========== Color Style ========== */
+
+a { color: #b4eef4; }
+
+input:read-only { background-color: #61777e; }
+
+.colorBase { background-color: #242830; color: #e8ebfb; }
+
+.colorContents { background-color: #36404b; }
+
+.colorOverray { background-color: rgba( 0, 0, 0, 0.8 ); color: gray; }
+
+.colorLightButton { background-color: #61777e; color: #242830; }
+.colorLightButton.clickable { background-color: #3490ab; color: #242830; }
+
+.colorLightArea {}
+
+.componentToggle { border-color: #e8ebfb; background-color: #61777e; }
+.componentToggle > div { background-color: #e8ebfb; }
+.componentToggle.on { background-color: #3490ab; }
+
+/* ========== Modal Style ========== */
+
+#modal
+{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	overflow: hidden;
+}
+
+#modal > div
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate( -50%, -50% );
+	padding: 1rem;
+	max-width: 95%;
+	max-height: 95%;
+	box-sizing: border-box;
+background-color: rgba( 0, 0, 0, 0.8 );
+}
+
+#modal > div > div {}
+
+#modal > div > button
+{
+	display: block;
+	text-align: center;
+	padding: 0;
+	line-height: 2rem;
+	position: absolute;
+	top: -1rem;
+	right: -1rem;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	border: 0;
+}
+
+.hidden { display: none; }
