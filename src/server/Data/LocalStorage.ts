@@ -50,7 +50,7 @@ class LocalStorage
 				{
 					data.cron.push(
 					{
-						time: m.slice( 2, 6 ),
+						time: m.slice( 2, 7 ),
 						command: m[ 7 ],
 						enable: !( m[ 1 ].match( /\#/ ) !== null ),
 					} );
