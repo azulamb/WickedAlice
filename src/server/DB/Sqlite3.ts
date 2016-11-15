@@ -36,7 +36,8 @@ class Sqlite implements DB
 		return new Promise( ( resolve, reject ) =>
 		{
 			const attr: string = option.attr ? option.attr.join( ',' ) : '*';
-			this.db.get( 'SELECT ' + attr + ' FROM ' + table + ' ' + where/*this.createWhere( where )*/, {}, ( error, result ) =>
+			if ( where ){ where = 'WHERE ' + where; }
+			this.db.get( 'SELECT ' + attr + ' FROM ' + table + ' ' + where + ' LIMIT 1', {}, ( error, result ) =>
 			{
 				if ( error ) { return reject( { error: error } ); }
 				resolve( result );
@@ -113,7 +114,7 @@ class Sqlite implements DB
 				p.push( this.run( 'CREATE TABLE option (key TEXT UNIQUE, val TEXT)' ) );
 				// TODO: config
 				// Create user table.
-				p.push( this.run( 'CREATE TABLE user (' + User.table( User.create() ) + ')' ) );
+				p.push( this.run( 'CREATE TABLE user (' + Sqlite.table( User.create() ) + ')' ) );
 				return Promise.all( p ).then( ( result ) =>
 				{
 					const p: Promise<any>[] = [];
@@ -127,6 +128,35 @@ class Sqlite implements DB
 	public registerUser( user: UserData )
 	{
 		return new Promise( ( resolve, reject ) =>{} );
+	}
+
+	public getUser( key: string | number ): Promise<User>
+	{
+		const where = typeof key === 'string' ? "email='" + this.invalidation( key ) + "'" : 'id=' + Math.floor( key );
+		return this.get( 'user', where ).then( ( result ) =>
+		{
+			if ( !result ){ return Promise.reject( { error: { message: 'Notfound' } } ); }
+			return Promise.resolve( {} );
+		} );
+	}
+
+	public invalidation( value: string ): string { return value.replace( /[\'\\]/g, '' ); }
+
+	public static table( data: { [ key: string ]: any }, table: { [ key: string ]: string } = {} ): string
+	{
+		const keys: string[] = [];
+		if ( data[ 'id' ] )
+		{
+			keys.push( 'id' );
+			(<any>table).id = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+		}
+		Object.keys( data ).forEach( ( key ) =>
+		{
+			if ( keys.indexOf( key ) < 0 ){ keys.push( key ); }
+			if ( table[ key ] ) { return; }
+			table[ key ] = typeof data[ key ] === 'number' ? 'INTEGER' : 'TEXT';
+		} );
+		return keys.map( ( key ) => { return key + ' ' + table[ key ]; } ).join( ', ' );
 	}
 }
 

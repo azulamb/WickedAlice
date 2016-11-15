@@ -9,6 +9,7 @@ class User
 			id: 0,
 			email: '',
 			name: '',
+			type: 1,
 		};
 
 		Object.keys( data ).forEach( ( key ) =>
@@ -19,22 +20,6 @@ class User
 		return user;
 	}
 
-	public static table( data: { [ key: string ]: any }, table: { [ key: string ]: string } = {} ): string
-	{
-		const keys: string[] = [];
-		if ( data[ 'id' ] )
-		{
-			keys.push( 'id' );
-			(<any>table).id = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-		}
-		Object.keys( data ).forEach( ( key ) =>
-		{
-			if ( keys.indexOf( key ) < 0 ){ keys.push( key ); }
-			if ( table[ key ] ) { return; }
-			table[ key ] = 'TEXT';
-		} );
-		return keys.map( ( key ) => { return key + ' ' + table[ key ]; } ).join( ', ' );
-	}
 }
 
 export = User;

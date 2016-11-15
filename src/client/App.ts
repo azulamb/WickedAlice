@@ -7,6 +7,7 @@ class App
 		{
 			case 'projects': return new Projects( params );
 			case 'schedule': return new Schedule( params );
+			case 'users': return new Users( params );
 			case 'mypage': return new MyPage( params );
 		}
 		return new ErrorPage( params );

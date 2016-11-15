@@ -45,7 +45,7 @@ class LocalStorage
 					data.env.push( { line: m[ 2 ], enable: !(m[ 1 ].match( /\#/ ) !== null) } );
 					return;
 				}
-				m = line.match( /^([\#\s]*)\s*([\*\/\d]+)\s+([\*\/\d]+)\s+([\*\/\d]+)\s+([\*\/\d]+)\s+([\*\/\d]+)\s+([\s\S]+)$/ );
+				m = line.match( /^([\#\s]*)\s*([\*\/\d\,\-]+)\s+([\*\/\d\,\-]+)\s+([\*\/\d\,\-]+)\s+([\*\/\d\,\-]+)\s+([\*\/\d\,\-]+)\s+([\s\S]+)$/ );
 				if ( m )
 				{
 					data.cron.push(

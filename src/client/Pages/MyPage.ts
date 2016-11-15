@@ -19,7 +19,7 @@ class MyPage extends App
 		root.add( new LinkItems().addItem( [
 			{ content: Dictionary.page.projects, callback: this.toPage( 'projects' ) },
 			{ content: Dictionary.page.schedule, callback: this.toPage( 'schedule' ) },
-			{ content: 'crontab', disable: true },
+			{ content: Dictionary.page.users, callback: this.toPage( 'users' ) },
 			{ content: Dictionary.page.setting, disable: true },
 		] ) );
 

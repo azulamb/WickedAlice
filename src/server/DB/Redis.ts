@@ -14,4 +14,9 @@ class Sqlite implements DB
 	{
 		return Promise.resolve( {} );
 	}
+
+	public getUser( key: string | number ): Promise<User>
+	{
+		return Promise.resolve({});
+	}
 }

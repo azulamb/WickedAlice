@@ -1,4 +1,3 @@
-
 class Schedule extends App
 {
 	private env: ItemLines;
@@ -36,10 +35,15 @@ class Schedule extends App
 	{
 		const root = new Component();
 
-		this.env = new ItemLines();
-		this.cron = new ItemLines();
+		this.env = new ItemLines().setNewLineGenerator( () => { return new EnvLine( '', false ); } );
+		const addEnv = new Button( '+' ).onClick( this.env.onAddCallback() );
 
-		root.add( [ this.env, this.cron ] );
+		this.cron = new ItemLines();
+		const addCron = new Button( '+' ).onClick( this.cron.onAddCallback() );
+
+		const update = new Button( Dictionary.button.update );
+
+		root.add( [ this.env, addEnv, this.cron, addCron, update ] );
 		return root;
 	}
 }
