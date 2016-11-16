@@ -1,3 +1,4 @@
+/// <reference path="../Types.ts" />
 import UserData = require( './UserData' );
 
 class User
