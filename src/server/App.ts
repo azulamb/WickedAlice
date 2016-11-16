@@ -1,8 +1,7 @@
 import l = require( './Log' );
 import express = require( 'express' );
-import session = require( 'express-session' );
 import Auth = require( './System/Auth' );
-import api = require( './System/Api' );
+import Api = require( './API/Api' );
 import DB = require( './DB/Sqlite3' );
 import LocalStorage = require( './Data/LocalStorage' );
 import path = require( 'path' );
@@ -53,24 +52,29 @@ function ErrorPage( req: express.Request, res: express.Response, next: express.N
 function AppInit( ls: LocalStorage, db: DB ): express.Express
 {
 	const app = express();
-	var router = express.Router();
-
-	app.use( Auth.passport.initialize() );
-	app.use( Auth.passport.session() );
-	app.use( session( { secret: process.env.SECRET_KEY || 'crocidolite' } ) );
+	const router = express.Router();
+	const auth = new Auth( app );
 
 	// public
 	app.use( express.static( process.env.PUBLIC_DOCUMENT || './public' ) );
 	if ( GOOGLE_SCOPE.indexOf( 'profile' ) < 0 ) { GOOGLE_SCOPE.push( 'profile' ); }
 	if ( GOOGLE_SCOPE.indexOf( 'email' ) < 0 ) { GOOGLE_SCOPE.push( 'email' ); }
-	Auth.init( app, db, GOOGLE_DATA, GOOGLE_SCOPE );
+	auth.setUpAuth( app, db, GOOGLE_DATA, GOOGLE_SCOPE );
 
 	// private
-	app.use( '/api', Auth.auth(), api( ls, db ) );
-	app.use( '/mypage', Auth.auth(), express.static( PRIVATE_DIR ) );
-	app.use( '/projects', Auth.auth(), express.static( PRIVATE_DIR ) );
-	app.use( '/schedule', Auth.auth(), express.static( PRIVATE_DIR ) );
-	app.use( '/*', Auth.auth(), ErrorPage );
+	app.use( '/api', auth.auth(), Api.router( ls, db ) );
+	app.use( '/mypage', auth.auth(), express.static( PRIVATE_DIR ) );
+	app.use( '/projects', auth.auth(), express.static( PRIVATE_DIR ) );
+	app.use( '/schedule', auth.auth(), express.static( PRIVATE_DIR ) );
+	app.use( '/*', auth.auth(), ErrorPage );
+
+	// Error
+	app.use( <any>( ( err: {}, req: express.Request, res: express.Response, next: express.NextFunction ) =>
+	{
+console.error(err);
+		res.status (500 );
+		res.json( { error: 'error' } );
+	} ) );
 
 	return app;
 }
