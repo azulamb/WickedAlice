@@ -4,9 +4,9 @@ class LinkItem extends Button
 {
 	protected root: HTMLElement;
 
-	constructor( text: string | Component, callback?: ( self: LinkItem, event: MouseEvent ) => any, disable: boolean = false )
+	constructor( text: string | Component, callback?: ( self: LinkItem, event: MouseEvent ) => any )
 	{
-		super( text, disable );
+		super( text );
 		if ( !callback ){ return; }
 		this.onClick( callback );
 	}

@@ -1,5 +1,6 @@
 /// <reference path="../Types.ts" />
 import UserData = require( './UserData' );
+import Auth = require( '../System/Auth' );
 
 class User
 {
@@ -37,17 +38,41 @@ class User
 	{
 		return (
 		{
-			id: user.id,
+			id: Auth.encodeKey( user.id ),
 			email: user.email,
 			name:  user.name,
 			type:  User.getUserTypeName( user.type ),
 		} );
 	}
 
-	public static deserialize( data: {} ): UserData
+	public static serializeCloseUser( user: UserData ): CloseUserData
+	{
+		return (
+		{
+			id: Auth.encodeKey( user.id ),
+			name:  user.name,
+			type:  User.getUserTypeName( user.type ),
+		} );
+	}
+
+	//public static deserialize( data: OpenUserData | CloseUserData ): UserData
+	public static deserialize( data: { [ key: string ]: any } ): UserData
 	{
 		const user = User.create();
-
+		Object.keys( data ).forEach( ( key ) =>
+		{
+			if ( (<any>user)[ key ] === undefined ) { return; }
+			if ( key === 'id' )
+			{
+				user.id = parseInt( Auth.decodeKey( data[ 'id' ] ) );
+			} else if( typeof (<any>user)[ key ] === 'number' )
+			{
+				(<any>user)[ key ] = parseInt( data[ key ] );
+			} else
+			{
+				(<any>user)[ key ] = data[ key ];
+			}
+		} );
 		return user;
 	}
 }

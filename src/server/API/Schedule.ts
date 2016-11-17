@@ -1,9 +1,9 @@
 import express = require( 'express' );
-import Api = require( './Api' );
+import API = require( './API' );
 import User = require( '../Data/User' );
 import LocalStorage = require( '../Data/LocalStorage' );
 
-class ScheduleApi
+class ScheduleAPI
 {
 	public static get( ls: LocalStorage )
 	{
@@ -22,4 +22,4 @@ class ScheduleApi
 	}
 }
 
-export = ScheduleApi;
+export = ScheduleAPI;

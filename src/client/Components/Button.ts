@@ -4,17 +4,21 @@ class Button extends Label
 {
 	private _on: { [ key: string ]: ( self: Button, event: MouseEvent ) => any } = {};
 
-	constructor ( content: string | Component, disable: boolean = false )
+	constructor ( content: string | Component )
 	{
 		super( content );
-		this.disable( disable );
 	}
 
 	protected createRoot(): HTMLElement { return document.createElement( 'button' ); }
 	protected baseClass() { this.addClass( 'componentButton' ); }
 
-	public disable( disable: boolean = false ): Button
+	public toggle( disable?: boolean ): Button
 	{
+		if ( disable === undefined )
+		{
+			this.root.classList.toggle( 'clickable' );
+			return this;
+		}
 		if ( disable )
 		{
 			this.root.classList.remove( 'clickable' );
@@ -23,6 +27,16 @@ class Button extends Label
 			this.root.classList.add( 'clickable' );
 		}
 		return this;
+	}
+
+	public enable(): Button
+	{
+		return this.toggle( true );
+	}
+
+	public disable(): Button
+	{
+		return this.toggle( false );
 	}
 
 	private onEvent( name: string, run: boolean, event: MouseEvent )

@@ -1,15 +1,15 @@
 import express = require( 'express' );
-import Api = require( './Api' );
+import API = require( './API' );
 import User = require( '../Data/User' );
 import DB = require( '../DB/DB' );
 
-class UserApi
+class UserAPI
 {
 	public static get( db: DB )
 	{
 		return ( req: express.Request, res: express.Response, next: express.NextFunction ) =>
 		{
-			db.getUser( Api.getUserMail( req ) ).then( ( user ) =>
+			db.getUser( API.getUserMail( req ) ).then( ( user ) =>
 			{
 				res.json( User.serialize( user ) );
 			} ).catch( ( error ) =>
@@ -20,4 +20,4 @@ class UserApi
 	}
 }
 
-export = UserApi;
+export = UserAPI;

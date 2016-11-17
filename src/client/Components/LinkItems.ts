@@ -12,7 +12,7 @@ class LinkItems extends Component
 	{
 		items.forEach( ( item ) =>
 		{
-			this.add( new LinkItem( item.content, item.callback, item.disable ).addClass( 'colorLightButton' ) );
+			this.add( new LinkItem( item.content, item.callback ).toggle( item.disable ).addClass( 'colorLightButton' ) );
 		} );
 		return this;
 	}

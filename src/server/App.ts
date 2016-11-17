@@ -1,7 +1,7 @@
 import l = require( './Log' );
 import express = require( 'express' );
 import Auth = require( './System/Auth' );
-import Api = require( './API/Api' );
+import API = require( './API/API' );
 import DB = require( './DB/Sqlite3' );
 import LocalStorage = require( './Data/LocalStorage' );
 import path = require( 'path' );
@@ -62,10 +62,11 @@ function AppInit( ls: LocalStorage, db: DB ): express.Express
 	auth.setUpAuth( app, db, GOOGLE_DATA, GOOGLE_SCOPE );
 
 	// private
-	app.use( '/api', auth.auth(), Api.router( ls, db ) );
+	app.use( '/api', auth.auth(), API.router( ls, db ) );
 	app.use( '/mypage', auth.auth(), express.static( PRIVATE_DIR ) );
 	app.use( '/projects', auth.auth(), express.static( PRIVATE_DIR ) );
 	app.use( '/schedule', auth.auth(), express.static( PRIVATE_DIR ) );
+	app.use( '/users', auth.auth(), express.static( PRIVATE_DIR ) );
 	app.use( '/*', auth.auth(), ErrorPage );
 
 	// Error

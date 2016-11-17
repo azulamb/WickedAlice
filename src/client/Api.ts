@@ -21,9 +21,16 @@ console.log( error );
 
 	// ----------------------------------------
 
-	public static getUser(): Promise<OpenUserData>
+	public static getMe(): Promise<OpenUserData>
 	{
 		return API.get( 'user/' );
+	}
+
+	public static updateMe( data: CloseUserData ): Promise<ResultMessage>
+	{
+		delete data.id;
+		delete data.type;
+		return API.post( 'user/', data );
 	}
 
 	public static getSchedule(): Promise<CronData>

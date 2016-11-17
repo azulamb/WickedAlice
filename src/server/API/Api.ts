@@ -5,7 +5,7 @@ import DB = require( '../DB/DB' );
 import User = require( './User' );
 import Schedule = require( './Schedule' );
 
-class Api
+class API
 {
 	private db: DB;
 
@@ -29,7 +29,7 @@ class Api
 	{
 		return ( req: express.Request, res: express.Response, next: express.NextFunction ) =>
 		{
-			this.db.session( Api.getUserMail( req ) ).then( ( result ) =>
+			this.db.session( API.getUserMail( req ) ).then( ( result ) =>
 			{
 				return next();
 			} ).catch( ( error ) =>
@@ -56,7 +56,7 @@ class Api
 	{
 		const router = express.Router();
 
-		const api = new Api( db );
+		const api = new API( db );
 
 		router.use( ( req, res, next ) => { next(); } );
 
@@ -71,4 +71,4 @@ class Api
 }
 
 
-export = Api;
+export = API;

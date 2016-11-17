@@ -10,8 +10,20 @@ interface CronData
 
 interface OpenUserData
 {
-	id: number,
+	id: string,
 	email: string,
 	name:  string,
 	type:  string,
 };
+
+interface CloseUserData
+{
+	id: string,
+	name: string,
+	type: string,
+};
+
+interface ResultMessage
+{
+	message: string,
+}

@@ -6,19 +6,40 @@ const Google = require( 'passport-google-oauth20' );
 import DB = require( '../DB/DB' );
 import UserData = require( '../Data/UserData' );
 import User = require( '../Data/User' );
+import crypto = require( 'crypto' );
 
 interface SessionData { user: string };
 
 class Auth
 {
 	private app: express.Express;
+	private static secret: string; // TODO: research crypto
 
 	constructor( app: express.Express )
 	{
 		this.app = app;
+		Auth.secret = process.env.SECRET_KEY || 'crocidolite';
 		this.app.use( passport.initialize() );
 		this.app.use( passport.session() );
-		this.app.use( session( { secret: process.env.SECRET_KEY || 'crocidolite' } ) );
+		this.app.use( session( { secret: Auth.secret } ) );
+	}
+
+	public static encodeKey( data: number | string ): string
+	{
+		const cipher = crypto.createCipher( 'aes192', Auth.secret );
+		cipher.update( new Buffer( data.toString() ) );
+		return cipher.final( 'hex' );
+	}
+
+	public static decodeKey( hash: string ): string
+	{
+		const decipher = crypto.createDecipher( 'aes192', Auth.secret );
+		decipher.update( hash, 'hex', 'utf8' );
+		try
+		{
+			return decipher.final('utf8');
+		} catch( e ) {}
+		return '';
 	}
 
 	public setUpAuth( app: express.Express,  db: DB, GOOGLE_DATA: {}/*Google.IStrategyOption*/, scope: string[] )
