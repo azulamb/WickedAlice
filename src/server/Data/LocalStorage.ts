@@ -10,10 +10,24 @@ class LocalStorage
 		this.dir = directory.replace( /\/+$/, '' );
 	}
 
-	public init(): Promise<{}> { return fs.mkdir( this.get() ); }
+	public init( userName: string = '' ): Promise<{}>
+	{
+		return fs.mkdir( this.get() ).then( ( result ) =>
+		{
+			if ( !result.exsists && userName )
+			{
+				return fs.chown( this.dir, userName, userName );
+			}
+			return Promise.resolve( {} );
+		} );
+	}
 
 	public get(): string { return this.dir; }
 
+	public changeUser( userName: string )
+	{
+		return fs.chown( this.dir, userName, userName );
+	}
 
 	public getCrontab(): Promise<CronData>
 	{

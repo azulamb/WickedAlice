@@ -88,9 +88,13 @@ function Init()
 	const ls = new LocalStorage( LOCAL_STORAGE );
 	const db = new DB();
 
-	p.push( ls.init().then( ( result ) =>
+	p.push( ls.init( USER ).then( ( result ) =>
 	{
-		return db.init( { file: process.env.DATABASE_FILE || ls.get() + '/data.sqlite3' } );
+		return db.init(
+		{
+			file: process.env.DATABASE_FILE || ls.get() + '/data.sqlite3',
+			user: USER,
+		} );
 	} ) );
 
 	return Promise.all( p ).then( ( result ) => { return { ls: ls, db: db, result: result }; } );
@@ -111,7 +115,7 @@ Init().then( ( result ) =>
 
 	AppInit( result.ls, result.db ).listen( PORT, () =>
 	{
-		if ( USER ){ process.setuid( USER ); }
+		if ( USER ) { process.setuid( USER ); }
 	} );
 } ).catch( ( error ) =>
 {

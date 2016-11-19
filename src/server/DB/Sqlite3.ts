@@ -2,6 +2,7 @@ import DB = require( './DB' );
 import sqlite = require( 'sqlite3' );
 import User = require( '../Data/User' );
 import UserData = require( '../Data/UserData' );
+import fs = require( '../FileSystem' );
 
 interface SQLITE_PARAMS{ [ key: string ]: any };
 
@@ -143,6 +144,8 @@ console.log(sql);
 			} ).catch( ( error ) =>
 			{
 				const p: Promise<any>[] = [];
+				// Change owner.
+				p.push( fs.chown( (<any>params).file, (<any>params).user, (<any>params).user ) );
 				// Create option table.
 				p.push( this.run( 'CREATE TABLE option (key TEXT UNIQUE, val TEXT)' ) );
 				// TODO: config
