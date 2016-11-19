@@ -23,6 +23,8 @@ https://console.developers.google.com/
 
 ```
 git clone https://github.com/HirokiMiyaoka/WickedAlice.git
+npm install -g typescript
+npm install -g pm2
 ```
 
 ### 環境変数の設定
