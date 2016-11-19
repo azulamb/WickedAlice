@@ -6,45 +6,24 @@ const Google = require( 'passport-google-oauth20' );
 import DB = require( '../DB/DB' );
 import UserData = require( '../Data/UserData' );
 import User = require( '../Data/User' );
-import crypto = require( 'crypto' );
 
 interface SessionData { user: string };
 
 class Auth
 {
 	private app: express.Express;
-	private static secret: string; // TODO: research crypto
 
-	constructor( app: express.Express )
+	constructor( app: express.Express, secret: string )
 	{
 		this.app = app;
-		Auth.secret = process.env.SECRET_KEY || 'crocidolite';
 		this.app.use( passport.initialize() );
 		this.app.use( passport.session() );
-		this.app.use( session( { secret: Auth.secret } ) );
-	}
-
-	public static encodeKey( data: number | string ): string
-	{
-		const cipher = crypto.createCipher( 'aes192', Auth.secret );
-		cipher.update( new Buffer( data.toString() ) );
-		return cipher.final( 'hex' );
-	}
-
-	public static decodeKey( hash: string ): string
-	{
-		const decipher = crypto.createDecipher( 'aes192', Auth.secret );
-		decipher.update( hash, 'hex', 'utf8' );
-		try
-		{
-			return decipher.final('utf8');
-		} catch( e ) {}
-		return '';
+		this.app.use( session( { secret: secret } ) );
 	}
 
 	public setUpAuth( app: express.Express,  db: DB, GOOGLE_DATA: {}/*Google.IStrategyOption*/, scope: string[] )
 	{
-		passport.serializeUser( ( user, done ) => { done( null, user.id ); } );
+		passport.serializeUser( ( user, done ) => { done( null, { email: this.getMail( user ) } ); } );
 
 		passport.deserializeUser( (obj, done) => { done( null, obj ); } );
 
@@ -52,10 +31,11 @@ class Auth
 		{
 			(<any>profile).token = accessToken;
 			(<any>profile).token_secret = refreshToken;
+			let saveUser:{} | boolean = false;
 			db.getUser( this.getMail( profile ) ).then( ( result ) =>
 			{
 				// Exists user.
-				this.setUser( passport, profile );
+				saveUser = { email: this.setUser( passport, profile ).email };
 				return Promise.resolve( {} );
 			} ).catch( ( error ) =>
 			{
@@ -65,7 +45,9 @@ class Auth
 					if ( count !== 0 ) { return Promise.resolve( { error: { message: 'Unauthorized user.' } } ); }
 
 					// First user is administrator.
-					db.registerUser( this.setUser( passport, profile, User.Type.administrator ) );
+					const user = this.setUser( passport, profile, User.Type.administrator );
+					saveUser = { email: user.email };
+					db.registerUser( user );
 					return Promise.resolve( {} );
 				} );
 			} ).then( ( result ) =>

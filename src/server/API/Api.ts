@@ -1,17 +1,17 @@
 import express = require( 'express' );
 import LocalStorage = require( '../Data/LocalStorage' );
 import DB = require( '../DB/DB' );
-// API
-import User = require( './User' );
-import Schedule = require( './Schedule' );
+import crypto = require( 'crypto' );
 
 class API
 {
 	private db: DB;
+	private static secret: string; // TODO: research crypto
 
-	constructor( db: DB )
+	constructor( db: DB, secret: string )
 	{
 		this.db = db;
+		API.secret = secret;
 	}
 
 	private error( res: express.Response, code: number, error: {} )
@@ -29,7 +29,7 @@ class API
 	{
 		return ( req: express.Request, res: express.Response, next: express.NextFunction ) =>
 		{
-			this.db.session( API.getUserMail( req ) ).then( ( result ) =>
+			this.db.session( this.getUserMail( req ) ).then( ( result ) =>
 			{
 				return next();
 			} ).catch( ( error ) =>
@@ -50,23 +50,26 @@ class API
 		};
 	}
 
-	public static getUserMail( req: express.Request ): string { return (<any>req).session.user || ''; }
+	private getUserMail( req: express.Request ): string { return (<any>req).session.user || ''; }
 
-	public static router( ls: LocalStorage, db: DB ): express.Router
+	public static getUserMail( req: express.Request ): string { return (<any>req).session.passport.user.email || ''; }
+
+	public static encodeKey( data: number | string ): string
 	{
-		const router = express.Router();
+		const cipher = crypto.createCipher( 'aes192', API.secret );
+		cipher.update( new Buffer( data.toString() ) );
+		return cipher.final( 'hex' );
+	}
 
-		const api = new API( db );
-
-		router.use( ( req, res, next ) => { next(); } );
-
-		// User
-		router.get( '/user/', api.checkSession(), User.get( db ), api.errorResponce() );
-
-		// Schedule
-		router.get( '/schedule/', api.checkSession(), Schedule.get( ls ), api.errorResponce() );
-
-		return router;
+	public static decodeKey( hash: string ): string
+	{
+		const decipher = crypto.createDecipher( 'aes192', API.secret );
+		decipher.update( hash, 'hex', 'utf8' );
+		try
+		{
+			return decipher.final('utf8');
+		} catch( e ) {}
+		return '';
 	}
 }
 

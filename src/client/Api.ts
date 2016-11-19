@@ -12,11 +12,11 @@ console.log( error );
 		} ).then( ( responce ) => { return responce.json(); } );
 	}
 
-	private static get(  api: string ): Promise<Response> { return API.timeout( '/api/' + api ); }
+	private static get(  api: string ): Promise<Response> { return API.timeout( '/api/' + api, { credentials: 'include' } ); }
 
 	private static post(  api: string, data: {} ): Promise<Response>
 	{
-		return API.timeout( '/api/' + api, { method: 'POST', body: JSON.stringify( data ) } );
+		return API.timeout( '/api/' + api, { method: 'POST', body: JSON.stringify( data ), credentials: 'include' } );
 	}
 
 	// ----------------------------------------

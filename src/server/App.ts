@@ -1,7 +1,7 @@
 import l = require( './Log' );
 import express = require( 'express' );
 import Auth = require( './System/Auth' );
-import API = require( './API/API' );
+import APIRouter = require( './API/APIRouter' );
 import DB = require( './DB/Sqlite3' );
 import LocalStorage = require( './Data/LocalStorage' );
 import path = require( 'path' );
@@ -53,7 +53,8 @@ function AppInit( ls: LocalStorage, db: DB ): express.Express
 {
 	const app = express();
 	const router = express.Router();
-	const auth = new Auth( app );
+	const secret = process.env.SECRET_KEY || 'crocidolite';
+	const auth = new Auth( app, secret );
 
 	// public
 	app.use( express.static( process.env.PUBLIC_DOCUMENT || './public' ) );
@@ -62,7 +63,7 @@ function AppInit( ls: LocalStorage, db: DB ): express.Express
 	auth.setUpAuth( app, db, GOOGLE_DATA, GOOGLE_SCOPE );
 
 	// private
-	app.use( '/api', auth.auth(), API.router( ls, db ) );
+	app.use( '/api', auth.auth(), APIRouter( ls, db, secret ) );
 	app.use( '/mypage', auth.auth(), express.static( PRIVATE_DIR ) );
 	app.use( '/projects', auth.auth(), express.static( PRIVATE_DIR ) );
 	app.use( '/schedule', auth.auth(), express.static( PRIVATE_DIR ) );
