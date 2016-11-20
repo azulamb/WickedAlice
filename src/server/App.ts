@@ -5,6 +5,8 @@ import APIRouter = require( './API/APIRouter' );
 import DB = require( './DB/Sqlite3' );
 import LocalStorage = require( './Data/LocalStorage' );
 import path = require( 'path' );
+import https = require( 'https' );
+import fs = require( 'fs' );
 
 /*
 # Need env
@@ -100,6 +102,11 @@ function Init()
 	return Promise.all( p ).then( ( result ) => { return { ls: ls, db: db, result: result }; } );
 }
 
+function changeUser()
+{
+	if ( USER ) { process.setuid( USER ); }
+}
+
 Init().then( ( result ) =>
 {
 	// Log output start.
@@ -113,10 +120,20 @@ Init().then( ( result ) =>
 	l.info( 'Root directory: ' + process.cwd() );
 	l.info( 'Listen on port: ' + PORT );
 
-	AppInit( result.ls, result.db ).listen( PORT, () =>
+	const app = AppInit( result.ls, result.db );
+	if ( process.env.CERT_DIR )
 	{
-		if ( USER ) { process.setuid( USER ); }
-	} );
+		const option =
+		{
+			key: fs.readFileSync ( process.env.CERT_DIR + '/privkey.pem' ),
+			cert: [ fs.readFileSync( process.env.CERT_DIR +  '/cert.pem' ) ],
+			ca: [ fs.readFileSync( process.env.CERT_DIR +  '/chain.pem' ), fs.readFileSync( process.env.CERT_DIR +  '/fullchain.pem' ) ],
+		};
+		https.createServer( option ).listen( PORT, changeUser );
+	} else
+	{
+		app.listen( PORT, changeUser );
+	}
 } ).catch( ( error ) =>
 {
 	l.error( error );
