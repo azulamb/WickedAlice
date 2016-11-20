@@ -9,6 +9,8 @@
     "cbuild": "tsc --project src/client",
     "server": "node ./app/App.js",
     "daemon": "pm2 start ./app/App.js --name=alice",
+    "stop": "pm2 stop alice",
+    "delete": "pm2 delete alice",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Hiroki",
