@@ -127,9 +127,9 @@ Init().then( ( result ) =>
 		{
 			key: fs.readFileSync ( process.env.CERT_DIR + '/privkey.pem' ),
 			cert: [ fs.readFileSync( process.env.CERT_DIR +  '/cert.pem' ) ],
-			ca: [ fs.readFileSync( process.env.CERT_DIR +  '/chain.pem' ), fs.readFileSync( process.env.CERT_DIR +  '/fullchain.pem' ) ],
+			ca: [ fs.readFileSync( process.env.CERT_DIR +  '/chain.pem', 'utf8' ), fs.readFileSync( process.env.CERT_DIR +  '/fullchain.pem', 'utf8' ) ],
 		};
-		https.createServer( option ).listen( PORT, changeUser );
+		https.createServer( option, app ).listen( PORT, changeUser );
 	} else
 	{
 		app.listen( PORT, changeUser );
