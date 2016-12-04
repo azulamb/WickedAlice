@@ -6,7 +6,7 @@
 
 * git
 * Node.js (>= 7.0.0)
-* TypeScriot (>= 2.0.0)
+* TypeScript (>= 2.0.0)
 * Redis / SQLite3
 * pm2
 
