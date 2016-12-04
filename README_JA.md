@@ -9,7 +9,7 @@ Node.jsで動作します。
 * git
 * Node.js (>= 7.0.0)
     * nvm推奨
-* TypeScriot (>= 2.0.0)
+* TypeScript (>= 2.0.0)
 
 ## Googleによる認証の準備
 
